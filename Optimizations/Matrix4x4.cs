@@ -242,27 +242,27 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public UnityEngine.Vector4 GetColumn(int index)
+		public Vector4 GetColumn(int index)
 		{
 			return index switch
 			       {
-				       0 => new UnityEngine.Vector4(m00, m10, m20, m30),
-				       1 => new UnityEngine.Vector4(m01, m11, m21, m31),
-				       2 => new UnityEngine.Vector4(m02, m12, m22, m32),
-				       3 => new UnityEngine.Vector4(m03, m13, m23, m33),
+				       0 => new Vector4(m00, m10, m20, m30),
+				       1 => new Vector4(m01, m11, m21, m31),
+				       2 => new Vector4(m02, m12, m22, m32),
+				       3 => new Vector4(m03, m13, m23, m33),
 				       _ => throw new IndexOutOfRangeException("Invalid column index!")
 			       };
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public UnityEngine.Vector4 GetRow(int index)
+		public Vector4 GetRow(int index)
 		{
 			return index switch
 			       {
-				       0 => new UnityEngine.Vector4(m00, m01, m02, m03),
-				       1 => new UnityEngine.Vector4(m10, m11, m12, m13),
-				       2 => new UnityEngine.Vector4(m20, m21, m22, m23),
-				       3 => new UnityEngine.Vector4(m30, m31, m32, m33),
+				       0 => new Vector4(m00, m01, m02, m03),
+				       1 => new Vector4(m10, m11, m12, m13),
+				       2 => new Vector4(m20, m21, m22, m23),
+				       3 => new Vector4(m30, m31, m32, m33),
 				       _ => throw new IndexOutOfRangeException("Invalid row index!")
 			       };
 		}

@@ -10,6 +10,14 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		public float z;
 		public float w;
 
+		public Vector4(float x, float y, float z, float w)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.w = w;
+		}
+		
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vector4 operator +(Vector4 a, Vector4 b)
 		{

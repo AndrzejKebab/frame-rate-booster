@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
 	internal struct Plane
 	{
-		public UnityEngine.Vector3 m_Normal;
+		public Vector3 m_Normal;
 		public float               m_Distance;
 
 		public Plane flipped

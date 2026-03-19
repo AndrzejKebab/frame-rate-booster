@@ -105,9 +105,9 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static implicit operator UnityEngine.Vector4(Color c)
+		public static implicit operator Vector4(Color c)
 		{
-			UnityEngine.Vector4 result = default;
+			Vector4 result = default;
 			result.x = c.r;
 			result.y = c.g;
 			result.z = c.b;
@@ -116,7 +116,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static implicit operator Color(UnityEngine.Vector4 v)
+		public static implicit operator Color(Vector4 v)
 		{
 			Color result = default;
 			result.r = v.x;

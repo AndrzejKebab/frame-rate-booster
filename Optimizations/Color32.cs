@@ -11,7 +11,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		public byte a;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static implicit operator Color32(UnityEngine.Color c)
+		public static implicit operator Color32(Color c)
 		{
 			Color32 result = default;
 
@@ -29,9 +29,9 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static implicit operator UnityEngine.Color(Color32 c)
+		public static implicit operator Color(Color32 c)
 		{
-			UnityEngine.Color result = default;
+			Color result = default;
 			const float       inv255 = 1f / 255f;
 
 			result.r = c.r * inv255;
