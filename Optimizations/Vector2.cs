@@ -25,10 +25,34 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector2 operator -(Vector2 a)
+		{
+			a.x = -a.x;
+			a.y = -a.y;
+			return a;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vector2 operator *(Vector2 a, float d)
 		{
 			a.x *= d;
 			a.y *= d;
+			return a;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector2 operator *(float d, Vector2 a)
+		{
+			a.x *= d;
+			a.y *= d;
+			return a;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector2 operator *(Vector2 a, Vector2 b)
+		{
+			a.x *= b.x;
+			a.y *= b.y;
 			return a;
 		}
 
@@ -38,6 +62,14 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			var inv = 1f / d;
 			a.x *= inv;
 			a.y *= inv;
+			return a;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector2 operator /(Vector2 a, Vector2 b)
+		{
+			a.x /= b.x;
+			a.y /= b.y;
 			return a;
 		}
 

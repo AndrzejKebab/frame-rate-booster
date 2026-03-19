@@ -1,7 +1,9 @@
 {
-    "name": "FrameRateBooster.Optimizations",
+    "name": "ToolBuddy.FrameRateBooster.Test",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:90522eed92c243a43a9fb0b2f20a4730"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,

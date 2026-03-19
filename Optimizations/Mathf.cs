@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("ToolBuddy.FrameRateBooster.Test")]
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {

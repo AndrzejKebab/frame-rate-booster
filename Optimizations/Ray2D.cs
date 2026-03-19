@@ -3,23 +3,22 @@ using System.Runtime.CompilerServices;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
-	internal struct Ray
+	internal struct Ray2D
 	{
-		private Vector3 m_Origin;
-		private Vector3 m_Direction;
+		private Vector2 m_Origin;
+		private Vector2 m_Direction;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Ray(Vector3 origin, Vector3 direction)
+		public Ray2D(Vector2 origin, Vector2 direction)
 		{
 			m_Origin = origin;
 
-			var mag = MathF.Sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+			var mag = MathF.Sqrt(direction.x * direction.x + direction.y * direction.y);
 			if (mag > 0.00001f)
 			{
 				var inv = 1f / mag;
 				m_Direction.x = direction.x * inv;
 				m_Direction.y = direction.y * inv;
-				m_Direction.z = direction.z * inv;
 			}
 			else
 			{
@@ -27,7 +26,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			}
 		}
 
-		public Vector3 origin
+		public Vector2 origin
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => m_Origin;
@@ -35,20 +34,19 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			set => m_Origin = value;
 		}
 
-		public Vector3 direction
+		public Vector2 direction
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => m_Direction;
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
-				var mag = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+				var mag = MathF.Sqrt(value.x * value.x + value.y * value.y);
 				if (mag > 0.00001f)
 				{
 					var inv = 1f / mag;
 					m_Direction.x = value.x * inv;
 					m_Direction.y = value.y * inv;
-					m_Direction.z = value.z * inv;
 				}
 				else
 				{
@@ -58,12 +56,11 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Vector3 GetPoint(float distance)
+		public Vector2 GetPoint(float distance)
 		{
-			Vector3 res = default;
+			Vector2 res = default;
 			res.x = m_Origin.x + m_Direction.x * distance;
 			res.y = m_Origin.y + m_Direction.y * distance;
-			res.z = m_Origin.z + m_Direction.z * distance;
 			return res;
 		}
 	}

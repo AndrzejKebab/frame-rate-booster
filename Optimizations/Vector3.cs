@@ -144,7 +144,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		public static Vector3 zero
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get;
-		} = new(0F, 0F, 0F);
+			get => default;
+		}
 	}
 }

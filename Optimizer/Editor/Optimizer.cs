@@ -85,8 +85,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 			}
 
 			var optimizedMethodsCount = Optimize(optimizationsAssemblyPath, targetAssemblyPath,
-			                                     optimizationInOwnAssembly,
-			                                     !optimizationInOwnAssembly);
+			                                     false,
+			                                     false);
 
 			stopWatch.Stop();
 
@@ -95,8 +95,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 			          " milliseconds and optimized " + optimizedMethodsCount + " methods and properties");
 		}
 
-		private static bool GetUniqueTargetAssembly(string     targetAssemblyName, IEnumerable<string> allAssembliesPaths,
-		                                            string     buildDirectory,     string              assemblyDescription,
+		private static bool GetUniqueTargetAssembly(string targetAssemblyName, IEnumerable<string> allAssembliesPaths,
+		                                            string buildDirectory, string assemblyDescription,
 		                                            out string targetAssemblyPath)
 		{
 			List<string> assembliesToOptimize = allAssembliesPaths.Where(s => s.Contains(targetAssemblyName)).ToList();
@@ -135,8 +135,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 		///     the  optimization process is finished?
 		/// </param>
 		/// <returns>The number of optimized methods</returns>
-		public static int Optimize(string optimizationsAssemblyPath,   string targetAssemblyPath,
-		                           bool   deleteOptimizationsAssembly, bool   trimOptimizationsAssembly)
+		private static int Optimize(string optimizationsAssemblyPath,   string targetAssemblyPath,
+		                            bool   deleteOptimizationsAssembly, bool   trimOptimizationsAssembly)
 		{
 			const string optimizedNameSpace = "ToolBuddy.FrameRateBooster.Optimizations";
 			const string originalNameSpace  = "UnityEngine";
@@ -200,45 +200,79 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 							method.Body.Instructions.Clear();
 							foreach (Instruction instruction in optimizedMethod.Body.Instructions)
 							{
-								Instruction newInstruction = instruction.Operand switch
-								                             {
-									                             // 1. Translates variables (e.g. c.r) from ToolBuddy structs to UnityEngine structs
-									                             FieldReference fieldReference when
-										                             fieldReference.DeclaringType.Namespace ==
-										                             optimizedNameSpace =>
-										                             Instruction.Create(instruction.OpCode,
-										                              new FieldReference(fieldReference.Name,
-										                               originalModule
-											                               .ImportReference(fieldReference
-												                               .FieldType),
-										                               GetOriginalType(originalModule,
-										                                originalNameSpace,
-										                                fieldReference.DeclaringType))),
-									                             // 2. Safely imports external fields
-									                             FieldReference fieldReference =>
-										                             Instruction.Create(instruction.OpCode,
-										                              originalModule
-											                              .ImportReference(fieldReference)),
-									                             // 3. Safely imports external methods (This fixes MathF.Max and MathF.Min crashing!)
-									                             MethodReference methodReference =>
-										                             Instruction.Create(instruction.OpCode,
-										                              originalModule
-											                              .ImportReference(methodReference)),
-									                             // 4. Translates structs for `result = default;` (This fixes the 'Declared in another module' ArgumentException!)
-									                             TypeReference
-										                             {
-											                             Namespace: optimizedNameSpace
-										                             } typeReference =>
-										                             Instruction.Create(instruction.OpCode,
-										                              GetOriginalType(originalModule,
-										                               originalNameSpace, typeReference)),
-									                             // 5. Safely imports external types
-									                             TypeReference typeReference =>
-										                             Instruction.Create(instruction.OpCode,
-										                              originalModule
-											                              .ImportReference(typeReference)),
-									                             _ => instruction
-								                             };
+								Instruction newInstruction;
+								switch (instruction.Operand)
+								{
+									case FieldReference fieldRef:
+										if (fieldRef.DeclaringType.Namespace == optimizedNameSpace)
+										{
+											newInstruction = Instruction.Create(instruction.OpCode,
+											                                    new FieldReference(fieldRef.Name,
+											                                     TranslateType(fieldRef.FieldType,
+											                                      originalModule,
+											                                      optimizedNameSpace,
+											                                      originalNameSpace),
+											                                     TranslateType(fieldRef
+												                                      .DeclaringType,
+											                                      originalModule,
+											                                      optimizedNameSpace,
+											                                      originalNameSpace)));
+										}
+										else
+										{
+											newInstruction =
+												Instruction.Create(instruction.OpCode,
+												                   originalModule.ImportReference(fieldRef));
+										}
+
+										break;
+
+									case MethodReference methodRef:
+										if (methodRef.DeclaringType.Namespace == optimizedNameSpace)
+										{
+											var newMethodRef = new MethodReference(methodRef.Name,
+											 TranslateType(methodRef.ReturnType, originalModule, optimizedNameSpace,
+											               originalNameSpace),
+											 TranslateType(methodRef.DeclaringType, originalModule,
+											               optimizedNameSpace, originalNameSpace))
+											                   {
+												                   HasThis           = methodRef.HasThis,
+												                   ExplicitThis      = methodRef.ExplicitThis,
+												                   CallingConvention = methodRef.CallingConvention
+											                   };
+
+											foreach (ParameterDefinition p in methodRef.Parameters)
+											{
+												newMethodRef.Parameters.Add(new ParameterDefinition(p.Name,
+												                             p.Attributes,
+												                             TranslateType(p.ParameterType,
+												                              originalModule,
+												                              optimizedNameSpace,
+												                              originalNameSpace)));
+											}
+
+											newInstruction = Instruction.Create(instruction.OpCode, newMethodRef);
+										}
+										else
+										{
+											newInstruction =
+												Instruction.Create(instruction.OpCode,
+												                   originalModule.ImportReference(methodRef));
+										}
+
+										break;
+
+									case TypeReference typeRef:
+										newInstruction = Instruction.Create(instruction.OpCode,
+										                                    TranslateType(typeRef, originalModule,
+										                                     optimizedNameSpace,
+										                                     originalNameSpace));
+										break;
+
+									default:
+										newInstruction = instruction;
+										break;
+								}
 
 								method.Body.GetILProcessor().Append(newInstruction);
 							}
@@ -296,6 +330,23 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 		{
 			return originalModule.Types.SingleOrDefault(t => t.Name == optimizedType.Name &&
 			                                                 t.Namespace == originalNameSpace);
+		}
+
+		private static TypeReference TranslateType(TypeReference type,               ModuleDefinition originalModule,
+		                                           string        optimizedNameSpace, string           originalNameSpace)
+		{
+			if (type.IsByReference)
+				return new ByReferenceType(TranslateType(((ByReferenceType)type).ElementType, originalModule,
+				                                         optimizedNameSpace, originalNameSpace));
+
+			if (type.IsArray)
+				return new ArrayType(TranslateType(((ArrayType)type).ElementType, originalModule, optimizedNameSpace,
+				                                   originalNameSpace));
+
+			return type.Namespace == optimizedNameSpace
+				       ? GetOriginalType(originalModule, originalNameSpace, type)
+				       :
+				       originalModule.ImportReference(type);
 		}
 	}
 }
