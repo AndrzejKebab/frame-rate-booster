@@ -1,206 +1,221 @@
-﻿using System;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Unity.Burst;
+using Unity.Mathematics;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
-    public struct Vector3
-    {
-        public float x;
-        public float y;
-        public float z;
+	[BurstCompile]
+	[StructLayout(LayoutKind.Sequential, Size = 12, Pack = 4)]
+	public struct Vector3
+	{
+		public float x;
+		public float y;
+		public float z;
 
-        public static Vector3 op_Addition(Vector3 a, Vector3 b)
-        {
-            a.x += b.x;
-            a.y += b.y;
-            a.z += b.z;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Addition(Vector3 a, Vector3 b)
+		{
+			a.x += b.x;
+			a.y += b.y;
+			a.z += b.z;
+			return a;
+		}
 
-        public static Vector3 op_UnaryNegation(Vector3 a)
-        {
-            Vector3 resutl;
-            resutl.x = -a.x;
-            resutl.y = -a.y;
-            resutl.z = -a.z;
-            return resutl;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_UnaryNegation(Vector3 a)
+		{
+			Vector3 result;
+			result.x = -a.x;
+			result.y = -a.y;
+			result.z = -a.z;
+			return result;
+		}
 
-        public static Vector3 op_Subtraction(Vector3 a, Vector3 b)
-        {
-            a.x -= b.x;
-            a.y -= b.y;
-            a.z -= b.z;
-            return a;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Subtraction(Vector3 a, Vector3 b)
+		{
+			a.x -= b.x;
+			a.y -= b.y;
+			a.z -= b.z;
+			return a;
+		}
 
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Multiply(Vector3 a, float d)
+		{
+			a.x *= d;
+			a.y *= d;
+			a.z *= d;
+			return a;
+		}
 
-        public static Vector3 op_Multiply(Vector3 a, float d)
-        {
-            a.x *= d;
-            a.y *= d;
-            a.z *= d;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Multiply(float d, Vector3 a)
+		{
+			a.x *= d;
+			a.y *= d;
+			a.z *= d;
+			return a;
+		}
 
-        public static Vector3 op_Multiply(float d, Vector3 a)
-        {
-            a.x *= d;
-            a.y *= d;
-            a.z *= d;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Division(Vector3 a, float d)
+		{
+			var inversed = 1 / d;
+			a.x *= inversed;
+			a.y *= inversed;
+			a.z *= inversed;
+			return a;
+		}
 
-        public static Vector3 op_Division(Vector3 a, float d)
-        {
-            float inversed = 1 / d;
-            a.x *= inversed;
-            a.y *= inversed;
-            a.z *= inversed;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Magnitude(Vector3 vector)
+		{
+			return math.sqrt(vector.x * vector.x + vector.y * vector.y +
+			                 vector.z * vector.z);
+		}
 
-        public static float Magnitude(Vector3 vector)
-        {
-            return (float)Math.Sqrt(vector.x * (double)vector.x + vector.y * (double)vector.y + vector.z * (double)vector.z);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public float get_magnitude()
+		{
+			return math.sqrt(x * x + y * y + z * z);
+		}
 
-        public float get_magnitude()
-        {
-            return (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Normalize()
+		{
+			var num = math.sqrt(x * x + y * y + z * z);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				x *= inversed;
+				y *= inversed;
+				z *= inversed;
+			}
+			else
+			{
+				x = 0;
+				y = 0;
+				z = 0;
+			}
+		}
 
-        public void Normalize()
-        {
-            float num = (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                this.x *= inversed;
-                this.y *= inversed;
-                this.z *= inversed;
-            }
-            else
-            {
-                this.x = 0;
-                this.y = 0;
-                this.z = 0;
-            }
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Normalize(Vector3 value)
+		{
+			Vector3 result;
+			var     num = math.sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				result.x = value.x * inversed;
+				result.y = value.y * inversed;
+				result.z = value.z * inversed;
+			}
+			else
+			{
+				result.x = 0;
+				result.y = 0;
+				result.z = 0;
+			}
 
-        public static Vector3 Normalize(Vector3 value)
-        {
-            Vector3 resutl;
-            float num = (float)Math.Sqrt(value.x * (double)value.x + value.y * (double)value.y + value.z * (double)value.z);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                resutl.x = value.x * inversed;
-                resutl.y = value.y * inversed;
-                resutl.z = value.z * inversed;
-            }
-            else
-            {
-                resutl.x = 0;
-                resutl.y = 0;
-                resutl.z = 0;
-            }
-            return resutl;
-        }
+			return result;
+		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Vector3 get_normalized()
+		{
+			Vector3 result;
+			var     num = math.sqrt(x * x + y * y + z * z);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				result.x = x * inversed;
+				result.y = y * inversed;
+				result.z = z * inversed;
+			}
+			else
+			{
+				result.x = 0;
+				result.y = 0;
+				result.z = 0;
+			}
 
-        public Vector3 get_normalized()
-        {
-            Vector3 resutl;
-            float num = (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                resutl.x = this.x * inversed;
-                resutl.y = this.y * inversed;
-                resutl.z = this.z * inversed;
-            }
-            else
-            {
-                resutl.x = 0;
-                resutl.y = 0;
-                resutl.z = 0;
-            }
-            return resutl;
-        }
+			return result;
+		}
 
-        public static float Distance(Vector3 a, Vector3 b)
-        {
-            a.x -= b.x;
-            a.y -= b.y;
-            a.z -= b.z;
-            return (float)Math.Sqrt(a.x * (double)a.x + a.y * (double)a.y + a.z * (double)a.z);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Distance(Vector3 a, Vector3 b)
+		{
+			a.x -= b.x;
+			a.y -= b.y;
+			a.z -= b.z;
+			return math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+		}
 
-        public static Vector3 Lerp(Vector3 a, Vector3 b, float t)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (t < 0.0f)
-                t = 0.0f;
-            else if (t > 1.0f)
-                t = 1f;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Lerp(Vector3 a, Vector3 b, float t)
+		{
+			t   =  math.max(0.0f, math.min(1f, t));
+			a.x += (b.x - a.x) * t;
+			a.y += (b.y - a.y) * t;
+			a.z += (b.z - a.z) * t;
+			return a;
+		}
 
-            a.x += (b.x - a.x) * t;
-            a.y += (b.y - a.y) * t;
-            a.z += (b.z - a.z) * t;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, float t)
+		{
+			a.x += (b.x - a.x) * t;
+			a.y += (b.y - a.y) * t;
+			a.z += (b.z - a.z) * t;
+			return a;
+		}
 
-        public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, float t)
-        {
-            a.x += (b.x - a.x) * t;
-            a.y += (b.y - a.y) * t;
-            a.z += (b.z - a.z) * t;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Scale(Vector3 a, Vector3 b)
+		{
+			a.x *= b.x;
+			a.y *= b.y;
+			a.z *= b.z;
+			return a;
+		}
 
-        public static Vector3 Scale(Vector3 a, Vector3 b)
-        {
-            a.x *= b.x;
-            a.y *= b.y;
-            a.z *= b.z;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Cross(Vector3 lhs, Vector3 rhs)
+		{
+			Vector3 result;
+			result.x = lhs.y * rhs.z - lhs.z * rhs.y;
+			result.y = lhs.z * rhs.x - lhs.x * rhs.z;
+			result.z = lhs.x * rhs.y - lhs.y * rhs.x;
+			return result;
+		}
 
-        public static Vector3 Cross(Vector3 lhs, Vector3 rhs)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            Vector3 result;
-            result.x = lhs.y * rhs.z - lhs.z * rhs.y;
-            result.y = lhs.z * rhs.x - lhs.x * rhs.z;
-            result.z = lhs.x * rhs.y - lhs.y * rhs.x;
-            return result;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Min(Vector3 lhs, Vector3 rhs)
+		{
+			if (lhs.x >= rhs.x)
+				lhs.x = rhs.x;
+			if (lhs.y >= rhs.y)
+				lhs.y = rhs.y;
+			if (lhs.z >= rhs.z)
+				lhs.z = rhs.z;
+			return lhs;
+		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 Max(Vector3 lhs, Vector3 rhs)
+		{
+			if (lhs.x <= rhs.x)
+				lhs.x = rhs.x;
+			if (lhs.y <= rhs.y)
+				lhs.y = rhs.y;
+			if (lhs.z <= rhs.z)
+				lhs.z = rhs.z;
+			return lhs;
+		}
 
-        public static Vector3 Min(Vector3 lhs, Vector3 rhs)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (lhs.x >= rhs.x)
-                lhs.x = rhs.x;
-            if (lhs.y >= rhs.y)
-                lhs.y = rhs.y;
-            if (lhs.z >= rhs.z)
-                lhs.z = rhs.z;
-            return lhs;
-        }
-
-        public static Vector3 Max(Vector3 lhs, Vector3 rhs)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (lhs.x <= rhs.x)
-                lhs.x = rhs.x;
-            if (lhs.y <= rhs.y)
-                lhs.y = rhs.y;
-            if (lhs.z <= rhs.z)
-                lhs.z = rhs.z;
-            return lhs;
-        }
-
-        //TODO https://forum.unity.com/threads/c-performance-tips.533831/  ?
-    }
+		//TODO https://forum.unity.com/threads/c-performance-tips.533831/  ?
+	}
 }

@@ -1,76 +1,72 @@
-﻿
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Unity.Burst;
+using Unity.Mathematics;
+
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
-    struct Color32
-    {
+	[BurstCompile]
+	[StructLayout(LayoutKind.Sequential, Size = 4, Pack = 1)]
+	public struct Color32
+	{
+		public byte r;
+		public byte g;
+		public byte b;
+		public byte a;
 
-        public byte r;
-        public byte g;
-        public byte b;
-        public byte a;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Color32 op_Implicit(Color c)
+		{
+			Color32     result;
+			const float maxValue = byte.MaxValue;
+			
+			c.r      = math.max(0.0f, math.min(1f, c.r));
+			result.r = (byte)(c.r * maxValue);
+			
+			c.g = math.max(0.0f, math.min(1f, c.g));
+			result.g = (byte)(c.g * maxValue);
+			
+			c.b = math.max(0.0f, math.min(1f, c.b));
+			result.b = (byte)(c.b * maxValue);
+			
+			c.a = math.max(0.0f, math.min(1f, c.a));
+			result.a = (byte)(c.a * maxValue);
+			
+			return result;
+		}
 
-        static public Color32 op_Implicit(Color c)
-        {
-            //TODO better branching code?
-            //TODO histoire habituel du double transformé en float
-            Color32 result;
-            float maxValue = byte.MaxValue;
-            if (c.r < 0.0f)
-                c.r = 0.0f;
-            else if (c.r > 1.0f)
-                c.r = 1f;
-            result.r = (byte)(c.r * maxValue);
-            if (c.g < 0.0f)
-                c.g = 0.0f;
-            else if (c.g > 1.0f)
-                c.g = 1f;
-            result.g = (byte)(c.g * maxValue);
-            if (c.b < 0.0f)
-                c.b = 0.0f;
-            else if (c.b > 1.0f)
-                c.b = 1f;
-            result.b = (byte)(c.b * maxValue);
-            if (c.a < 0.0f)
-                c.a = 0.0f;
-            else if (c.a > 1.0f)
-                c.a = 1f;
-            result.a = (byte)(c.a * maxValue);
-            return result;
-        }
-        public static Color op_Implicit(Color32 c)
-        {
-            Color result;
-            float inverseMaxValue = 1f / (float)byte.MaxValue;
-            result.r = (float)c.r * inverseMaxValue;
-            result.g = (float)c.g * inverseMaxValue;
-            result.b = (float)c.b * inverseMaxValue;
-            result.a = (float)c.a * inverseMaxValue;
-            return result;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Color op_Implicit(Color32 c)
+		{
+			Color       result;
+			const float inverseMaxValue = 1f / byte.MaxValue;
+			result.r = c.r * inverseMaxValue;
+			result.g = c.g * inverseMaxValue;
+			result.b = c.b * inverseMaxValue;
+			result.a = c.a * inverseMaxValue;
+			return result;
+		}
 
-        public static Color32 Lerp(Color32 a, Color32 b, float t)
-        {
-            if (t < 0.0f)
-                t = 0.0f;
-            else if (t > 1.0f)
-                t = 1f;
-            //TODO same comment about why code had conversion to double here
-            a.r = (byte)((float)a.r + (float)((int)b.r - (int)a.r) * t);
-            a.g = (byte)((float)a.g + (float)((int)b.g - (int)a.g) * t);
-            a.b = (byte)((float)a.b + (float)((int)b.b - (int)a.b) * t);
-            a.a = (byte)((float)a.a + (float)((int)b.a - (int)a.a) * t);
-            return a;
-        }
-        public static Color32 LerpUnclamped(Color32 a, Color32 b, float t)
-        {
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Color32 Lerp(Color32 a, Color32 b, float t)
+		{
+			t   = math.max(0.0f, math.min(1f, t));
+			a.r = (byte)(a.r + (b.r - a.r) * t);
+			a.g = (byte)(a.g + (b.g - a.g) * t);
+			a.b = (byte)(a.b + (b.b - a.b) * t);
+			a.a = (byte)(a.a + (b.a - a.a) * t);
+			return a;
+		}
 
-            //TODO same comment about why code had conversion to double here
-            a.r = (byte)((float)a.r + (float)((int)b.r - (int)a.r) * t);
-            a.g = (byte)((float)a.g + (float)((int)b.g - (int)a.g) * t);
-            a.b = (byte)((float)a.b + (float)((int)b.b - (int)a.b) * t);
-            a.a = (byte)((float)a.a + (float)((int)b.a - (int)a.a) * t);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Color32 LerpUnclamped(Color32 a, Color32 b, float t)
+		{
+			a.r = (byte)(a.r + (b.r - a.r) * t);
+			a.g = (byte)(a.g + (b.g - a.g) * t);
+			a.b = (byte)(a.b + (b.b - a.b) * t);
+			a.a = (byte)(a.a + (b.a - a.a) * t);
 
-            return a;
-        }
-    }
+			return a;
+		}
+	}
 }

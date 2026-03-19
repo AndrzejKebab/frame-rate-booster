@@ -1,256 +1,276 @@
-﻿using System;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Unity.Burst;
+using Unity.Mathematics;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
-    struct Vector4
-    {
-        public float x;
-        public float y;
-        public float z;
-        public float w;
+	[BurstCompile]
+	[StructLayout(LayoutKind.Sequential, Size = 16, Pack = 4)]
+	public struct Vector4
+	{
+		public float x;
+		public float y;
+		public float z;
+		public float w;
 
-        //TODO some implicit methods are slower than original
+		//TODO some implicit methods are slower than original
 
-        public static Vector4 op_Implicit(Vector3 v)
-        {
-            //TODO remove assignation to 0 here and other implicit methods
-            Vector4 result;
-            result.x = v.x;
-            result.y = v.y;
-            result.z = v.z;
-            result.w = 0.0f;
-            return result;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Implicit(Vector3 v)
+		{
+			//TODO remove assignation to 0 here and other implicit methods
+			Vector4 result;
+			result.x = v.x;
+			result.y = v.y;
+			result.z = v.z;
+			result.w = 0.0f;
+			return result;
+		}
 
-        public static Vector3 op_Implicit(Vector4 v)
-        {
-            Vector3 result;
-            result.x = v.x;
-            result.y = v.y;
-            result.z = v.z;
-            return result;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 op_Implicit(Vector4 v)
+		{
+			Vector3 result;
+			result.x = v.x;
+			result.y = v.y;
+			result.z = v.z;
+			return result;
+		}
 
-        public static Vector4 op_Implicit(Vector2 v)
-        {
-            Vector4 result;
-            result.x = v.x;
-            result.y = v.y;
-            result.z = 0.0f;
-            result.w = 0.0f;
-            return result;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Implicit(Vector2 v)
+		{
+			Vector4 result;
+			result.x = v.x;
+			result.y = v.y;
+			result.z = 0.0f;
+			result.w = 0.0f;
+			return result;
+		}
 
-        //TODO Vector2 op_Implicit(UnityEngine.Vector4 v)
-        //public static Vector2 op_Implicit(UnityEngine.Vector4 v)
-        //{
-        //    Vector2 result;
-        //    result.x = v.x;
-        //    result.y = v.y;
-        //    return result;
-        //}
+		//TODO Vector2 op_Implicit(UnityEngine.Vector4 v)
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//public static Vector2 op_Implicit(UnityEngine.Vector4 v)
+		//{
+		//    Vector2 result;
+		//    result.x = v.x;
+		//    result.y = v.y;
+		//    return result;
+		//}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Addition(Vector4 a, Vector4 b)
+		{
+			a.x += b.x;
+			a.y += b.y;
+			a.z += b.z;
+			a.w += b.w;
+			return a;
+		}
 
-        public static Vector4 op_Addition(Vector4 a, Vector4 b)
-        {
-            a.x += b.x;
-            a.y += b.y;
-            a.z += b.z;
-            a.w += b.w;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_UnaryNegation(Vector4 a)
+		{
+			Vector4 result;
+			result.x = -a.x;
+			result.y = -a.y;
+			result.z = -a.z;
+			result.w = -a.w;
+			return result;
+		}
 
-        public static Vector4 op_UnaryNegation(Vector4 a)
-        {
-            Vector4 resutl;
-            resutl.x = -a.x;
-            resutl.y = -a.y;
-            resutl.z = -a.z;
-            resutl.w = -a.w;
-            return resutl;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Subtraction(Vector4 a, Vector4 b)
+		{
+			a.x -= b.x;
+			a.y -= b.y;
+			a.z -= b.z;
+			a.w -= b.w;
+			return a;
+		}
 
-        public static Vector4 op_Subtraction(Vector4 a, Vector4 b)
-        {
-            a.x -= b.x;
-            a.y -= b.y;
-            a.z -= b.z;
-            a.w -= b.w;
-            return a;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Multiply(Vector4 a, float d)
+		{
+			a.x *= d;
+			a.y *= d;
+			a.z *= d;
+			a.w *= d;
+			return a;
+		}
 
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Multiply(float d, Vector4 a)
+		{
+			a.x *= d;
+			a.y *= d;
+			a.z *= d;
+			a.w *= d;
+			return a;
+		}
 
-        public static Vector4 op_Multiply(Vector4 a, float d)
-        {
-            a.x *= d;
-            a.y *= d;
-            a.z *= d;
-            a.w *= d;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 op_Division(Vector4 a, float d)
+		{
+			var inversed = 1 / d;
+			a.x *= inversed;
+			a.y *= inversed;
+			a.z *= inversed;
+			a.w *= inversed;
+			return a;
+		}
 
-        public static Vector4 op_Multiply(float d, Vector4 a)
-        {
-            a.x *= d;
-            a.y *= d;
-            a.z *= d;
-            a.w *= d;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Magnitude(Vector4 vector)
+		{
+			return math.sqrt(vector.x * vector.x + vector.y * vector.y +
+			                 vector.z * vector.z + vector.w * vector.w);
+		}
 
-        public static Vector4 op_Division(Vector4 a, float d)
-        {
-            float inversed = 1 / d;
-            a.x *= inversed;
-            a.y *= inversed;
-            a.z *= inversed;
-            a.w *= inversed;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public float get_magnitude()
+		{
+			return math.sqrt(x * x + y * y + z * z + w * w);
+		}
 
-        public static float Magnitude(Vector4 vector)
-        {
-            return (float)Math.Sqrt(vector.x * (double)vector.x + vector.y * (double)vector.y + vector.z * (double)vector.z + vector.w * (double)vector.w);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Normalize()
+		{
+			var num = math.sqrt(x * x + y * y + z * z + w * w);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				x *= inversed;
+				y *= inversed;
+				z *= inversed;
+				w *= inversed;
+			}
+			else
+			{
+				x = 0;
+				y = 0;
+				z = 0;
+				w = 0;
+			}
+		}
 
-        public float get_magnitude()
-        {
-            return (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z + this.w * (double)this.w);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 Normalize(Vector4 value)
+		{
+			Vector4 result;
+			var num = math.sqrt(value.x * value.x + value.y * value.y + value.z * value.z +
+			                    value.w * value.w);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				result.x = value.x * inversed;
+				result.y = value.y * inversed;
+				result.z = value.z * inversed;
+				result.w = value.w * inversed;
+			}
+			else
+			{
+				result.x = 0;
+				result.y = 0;
+				result.z = 0;
+				result.w = 0;
+			}
 
-        public void Normalize()
-        {
-            float num = (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z + this.w * (double)this.w);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                this.x *= inversed;
-                this.y *= inversed;
-                this.z *= inversed;
-                this.w *= inversed;
-            }
-            else
-            {
-                this.x = 0;
-                this.y = 0;
-                this.z = 0;
-                this.w = 0;
-            }
-        }
+			return result;
+		}
 
-        public static Vector4 Normalize(Vector4 value)
-        {
-            Vector4 resutl;
-            float num = (float)Math.Sqrt(value.x * (double)value.x + value.y * (double)value.y + value.z * (double)value.z + value.w * (double)value.w);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                resutl.x = value.x * inversed;
-                resutl.y = value.y * inversed;
-                resutl.z = value.z * inversed;
-                resutl.w = value.w * inversed;
-            }
-            else
-            {
-                resutl.x = 0;
-                resutl.y = 0;
-                resutl.z = 0;
-                resutl.w = 0;
-            }
-            return resutl;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Vector4 get_normalized()
+		{
+			Vector4 result;
+			var     num = math.sqrt(x * x + y * y + z * z + w * w);
+			if (num > 9.99999974737875E-06)
+			{
+				var inversed = 1 / num;
+				result.x = x * inversed;
+				result.y = y * inversed;
+				result.z = z * inversed;
+				result.w = w * inversed;
+			}
+			else
+			{
+				result.x = 0;
+				result.y = 0;
+				result.z = 0;
+				result.w = 0;
+			}
 
+			return result;
+		}
 
-        public Vector4 get_normalized()
-        {
-            Vector4 resutl;
-            float num = (float)Math.Sqrt(this.x * (double)this.x + this.y * (double)this.y + this.z * (double)this.z + this.w * (double)this.w);
-            if (num > 9.99999974737875E-06)
-            {
-                float inversed = 1 / num;
-                resutl.x = this.x * inversed;
-                resutl.y = this.y * inversed;
-                resutl.z = this.z * inversed;
-                resutl.w = this.w * inversed;
-            }
-            else
-            {
-                resutl.x = 0;
-                resutl.y = 0;
-                resutl.z = 0;
-                resutl.w = 0;
-            }
-            return resutl;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Distance(Vector4 a, Vector4 b)
+		{
+			a.x -= b.x;
+			a.y -= b.y;
+			a.z -= b.z;
+			a.w -= b.w;
+			return math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
+		}
 
-        public static float Distance(Vector4 a, Vector4 b)
-        {
-            a.x -= b.x;
-            a.y -= b.y;
-            a.z -= b.z;
-            a.w -= b.w;
-            return (float)Math.Sqrt(a.x * (double)a.x + a.y * (double)a.y + a.z * (double)a.z + a.w * (double)a.w);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 Lerp(Vector4 a, Vector4 b, float t)
+		{
+			t   =  math.max(0.0f, math.min(1f, t));
+			a.x += (b.x - a.x) * t;
+			a.y += (b.y - a.y) * t;
+			a.z += (b.z - a.z) * t;
+			a.w += (b.w - a.w) * t;
+			return a;
+		}
 
-        public static Vector4 Lerp(Vector4 a, Vector4 b, float t)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (t < 0.0f)
-                t = 0.0f;
-            else if (t > 1.0f)
-                t = 1f;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 LerpUnclamped(Vector4 a, Vector4 b, float t)
+		{
+			a.x += (b.x - a.x) * t;
+			a.y += (b.y - a.y) * t;
+			a.z += (b.z - a.z) * t;
+			a.w += (b.w - a.w) * t;
+			return a;
+		}
 
-            a.x += (b.x - a.x) * t;
-            a.y += (b.y - a.y) * t;
-            a.z += (b.z - a.z) * t;
-            a.w += (b.w - a.w) * t;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 Scale(Vector4 a, Vector4 b)
+		{
+			a.x *= b.x;
+			a.y *= b.y;
+			a.z *= b.z;
+			a.w *= b.w;
+			return a;
+		}
 
-        public static Vector4 LerpUnclamped(Vector4 a, Vector4 b, float t)
-        {
-            a.x += (b.x - a.x) * t;
-            a.y += (b.y - a.y) * t;
-            a.z += (b.z - a.z) * t;
-            a.w += (b.w - a.w) * t;
-            return a;
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 Min(Vector4 lhs, Vector4 rhs)
+		{
+			if (lhs.x >= rhs.x)
+				lhs.x = rhs.x;
+			if (lhs.y >= rhs.y)
+				lhs.y = rhs.y;
+			if (lhs.z >= rhs.z)
+				lhs.z = rhs.z;
+			if (lhs.w >= rhs.w)
+				lhs.w = rhs.w;
+			return lhs;
+		}
 
-        public static Vector4 Scale(Vector4 a, Vector4 b)
-        {
-            a.x *= b.x;
-            a.y *= b.y;
-            a.z *= b.z;
-            a.w *= b.w;
-            return a;
-        }
-
-        public static Vector4 Min(Vector4 lhs, Vector4 rhs)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (lhs.x >= rhs.x)
-                lhs.x = rhs.x;
-            if (lhs.y >= rhs.y)
-                lhs.y = rhs.y;
-            if (lhs.z >= rhs.z)
-                lhs.z = rhs.z;
-            if (lhs.w >= rhs.w)
-                lhs.w = rhs.w;
-            return lhs;
-        }
-
-        public static Vector4 Max(Vector4 lhs, Vector4 rhs)
-        {
-            //TODO why the Unity's code has a double conversion but the build assembly don't have it?
-            if (lhs.x <= rhs.x)
-                lhs.x = rhs.x;
-            if (lhs.y <= rhs.y)
-                lhs.y = rhs.y;
-            if (lhs.z <= rhs.z)
-                lhs.z = rhs.z;
-            if (lhs.w <= rhs.w)
-                lhs.w = rhs.w;
-            return lhs;
-        }
-    }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector4 Max(Vector4 lhs, Vector4 rhs)
+		{
+			if (lhs.x <= rhs.x)
+				lhs.x = rhs.x;
+			if (lhs.y <= rhs.y)
+				lhs.y = rhs.y;
+			if (lhs.z <= rhs.z)
+				lhs.z = rhs.z;
+			if (lhs.w <= rhs.w)
+				lhs.w = rhs.w;
+			return lhs;
+		}
+	}
 }
