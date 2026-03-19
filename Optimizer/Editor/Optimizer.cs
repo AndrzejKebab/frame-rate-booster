@@ -5,9 +5,9 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.Callbacks;
 using Debug = UnityEngine.Debug;
 
 namespace ToolBuddy.FrameRateBooster.Optimizer
@@ -95,8 +95,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizer
 			          " milliseconds and optimized " + optimizedMethodsCount + " methods and properties");
 		}
 
-		private static bool GetUniqueTargetAssembly(string targetAssemblyName, IEnumerable<string> allAssembliesPaths,
-		                                            string buildDirectory, string assemblyDescription,
+		private static bool GetUniqueTargetAssembly(string     targetAssemblyName, IEnumerable<string> allAssembliesPaths,
+		                                            string     buildDirectory,     string              assemblyDescription,
 		                                            out string targetAssemblyPath)
 		{
 			List<string> assembliesToOptimize = allAssembliesPaths.Where(s => s.Contains(targetAssemblyName)).ToList();

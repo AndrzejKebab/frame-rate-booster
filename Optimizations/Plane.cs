@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
@@ -77,7 +78,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void Translate(Vector3 translation)
 		{
-			m_Distance += (m_Normal.x * translation.x + m_Normal.y * translation.y + m_Normal.z * translation.z);
+			m_Distance += m_Normal.x * translation.x + m_Normal.y * translation.y + m_Normal.z * translation.z;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -93,11 +94,11 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Vector3 ClosestPointOnPlane(Vector3 point)
 		{
-			var               dist = m_Normal.x * point.x + m_Normal.y * point.y + m_Normal.z * point.z + m_Distance;
+			var     dist = m_Normal.x * point.x + m_Normal.y * point.y + m_Normal.z * point.z + m_Distance;
 			Vector3 res  = default;
-			res.x = point.x - (m_Normal.x * dist);
-			res.y = point.y - (m_Normal.y * dist);
-			res.z = point.z - (m_Normal.z * dist);
+			res.x = point.x - m_Normal.x * dist;
+			res.y = point.y - m_Normal.y * dist;
+			res.z = point.z - m_Normal.z * dist;
 			return res;
 		}
 
@@ -110,7 +111,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool GetSide(Vector3 point)
 		{
-			return (m_Normal.x * point.x + m_Normal.y * point.y + m_Normal.z * point.z + m_Distance) > 0.0f;
+			return m_Normal.x * point.x + m_Normal.y * point.y + m_Normal.z * point.z + m_Distance > 0.0f;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -122,7 +123,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Raycast(UnityEngine.Ray ray, out float enter)
+		public bool Raycast(Ray ray, out float enter)
 		{
 			var vdot = ray.direction.x * m_Normal.x + ray.direction.y * m_Normal.y + ray.direction.z * m_Normal.z;
 			var ndot = -(ray.origin.x * m_Normal.x + ray.origin.y * m_Normal.y + ray.origin.z * m_Normal.z) -

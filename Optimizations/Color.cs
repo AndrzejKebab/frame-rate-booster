@@ -161,7 +161,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void RGBToHSV(Color rgbColor, out float H, out float S, out float V)
 		{
-			if ((rgbColor.b > rgbColor.g) && (rgbColor.b > rgbColor.r))
+			if (rgbColor.b > rgbColor.g && rgbColor.b > rgbColor.r)
 				RGBToHSVHelper(4f, rgbColor.b, rgbColor.r, rgbColor.g, out H, out S, out V);
 			else if (rgbColor.g > rgbColor.r)
 				RGBToHSVHelper(2f, rgbColor.g, rgbColor.b, rgbColor.r, out H, out S, out V);
@@ -170,7 +170,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static void RGBToHSVHelper(float     offset, float     dominantcolor, float colorone, float colortwo,
+		private static void RGBToHSVHelper(float     offset, float     dominantcolor, float     colorone, float colortwo,
 		                                   out float H,      out float S,             out float V)
 		{
 			V = dominantcolor;
@@ -182,7 +182,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 				if (diff != 0f)
 				{
 					S = diff / V;
-					H = offset + ((colorone - colortwo) / diff);
+					H = offset + (colorone - colortwo) / diff;
 				}
 				else
 				{
@@ -222,7 +222,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			{
 				retval.a = 1f;
 				var h_to_floor = H * 6.0f;
-				var   temp       = (int)MathF.Floor(h_to_floor);
+				var temp       = (int)MathF.Floor(h_to_floor);
 				var t          = h_to_floor - temp;
 				var var_1      = V * (1f - S);
 				var var_2      = V * (1f - S * t);
@@ -280,7 +280,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 
 			return retval;
 		}
-		
+
 		public float this[int index]
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]

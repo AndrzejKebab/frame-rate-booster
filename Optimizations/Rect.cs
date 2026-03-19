@@ -156,15 +156,15 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool Contains(Vector2 point)
 		{
-			return (point.x >= m_XMin) && (point.x < m_XMin + m_Width) &&
-			       (point.y >= m_YMin) && (point.y < m_YMin + m_Height);
+			return point.x >= m_XMin && point.x < m_XMin + m_Width &&
+			       point.y >= m_YMin && point.y < m_YMin + m_Height;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool Contains(Vector3 point)
 		{
-			return (point.x >= m_XMin) && (point.x < m_XMin + m_Width) &&
-			       (point.y >= m_YMin) && (point.y < m_YMin + m_Height);
+			return point.x >= m_XMin && point.x < m_XMin + m_Width &&
+			       point.y >= m_YMin && point.y < m_YMin + m_Height;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -190,15 +190,15 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool Overlaps(Rect other)
 		{
-			return (other.m_XMin + other.m_Width > m_XMin &&
-			        other.m_XMin < m_XMin + m_Width &&
-			        other.m_YMin + other.m_Height > m_YMin &&
-			        other.m_YMin < m_YMin + m_Height);
+			return other.m_XMin + other.m_Width > m_XMin &&
+			       other.m_XMin < m_XMin + m_Width &&
+			       other.m_YMin + other.m_Height > m_YMin &&
+			       other.m_YMin < m_YMin + m_Height;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vector2 NormalizedToPoint(Rect                rectangle,
-		                                                    Vector2 normalizedRectCoordinates)
+		public static Vector2 NormalizedToPoint(Rect    rectangle,
+		                                        Vector2 normalizedRectCoordinates)
 		{
 			Vector2 res = default;
 			res.x = rectangle.m_XMin + rectangle.m_Width * normalizedRectCoordinates.x;
@@ -210,8 +210,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		public static Vector2 PointToNormalized(Rect rectangle, Vector2 point)
 		{
 			Vector2 res = default;
-			var               nx  = rectangle.m_Width != 0f ? (point.x - rectangle.m_XMin) / rectangle.m_Width : 0f;
-			var               ny  = rectangle.m_Height != 0f ? (point.y - rectangle.m_YMin) / rectangle.m_Height : 0f;
+			var     nx  = rectangle.m_Width != 0f ? (point.x - rectangle.m_XMin) / rectangle.m_Width : 0f;
+			var     ny  = rectangle.m_Height != 0f ? (point.y - rectangle.m_YMin) / rectangle.m_Height : 0f;
 
 			res.x = MathF.Max(0f, MathF.Min(1f, nx));
 			res.y = MathF.Max(0f, MathF.Min(1f, ny));

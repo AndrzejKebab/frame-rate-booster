@@ -16,8 +16,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			this.y = y;
 			this.z = z;
 		}
-		
-		
+
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vector3 operator +(Vector3 a, Vector3 b)
 		{
@@ -119,13 +119,13 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			result.z = lhs.x * rhs.y - lhs.y * rhs.x;
 			return result;
 		}
-		
+
 		public Vector3 normalized
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => Vector3.Normalize(this);
+			get => Normalize(this);
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vector3 Normalize(Vector3 value)
 		{
@@ -134,9 +134,13 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 				return value / mag;
 			return zero;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float Magnitude(Vector3 vector) { return (float)Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z); }
+		public static float Magnitude(Vector3 vector)
+		{
+			return (float)Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+		}
+
 		public static Vector3 zero
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]

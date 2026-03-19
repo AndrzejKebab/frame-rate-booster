@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Unity.Mathematics;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
@@ -142,8 +141,8 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		{
 			var nx = Math.Max(Math.Min(bounds.m_XMin + bounds.m_Width, m_XMin), bounds.m_XMin);
 			var ny = Math.Max(Math.Min(bounds.m_YMin + bounds.m_Height, m_YMin), bounds.m_YMin);
-			var nw = Math.Min((bounds.m_XMin + bounds.m_Width) - nx, m_Width);
-			var nh = Math.Min((bounds.m_YMin + bounds.m_Height) - ny, m_Height);
+			var nw = Math.Min(bounds.m_XMin + bounds.m_Width - nx, m_Width);
+			var nh = Math.Min(bounds.m_YMin + bounds.m_Height - ny, m_Height);
 
 			m_XMin   = nx;
 			m_YMin   = ny;

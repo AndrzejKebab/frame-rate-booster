@@ -163,12 +163,12 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool Intersects(Bounds bounds)
 		{
-			return (m_Center.x - m_Extents.x <= bounds.m_Center.x + bounds.m_Extents.x) &&
-			       (m_Center.x + m_Extents.x >= bounds.m_Center.x - bounds.m_Extents.x) &&
-			       (m_Center.y - m_Extents.y <= bounds.m_Center.y + bounds.m_Extents.y) &&
-			       (m_Center.y + m_Extents.y >= bounds.m_Center.y - bounds.m_Extents.y) &&
-			       (m_Center.z - m_Extents.z <= bounds.m_Center.z + bounds.m_Extents.z) &&
-			       (m_Center.z + m_Extents.z >= bounds.m_Center.z - bounds.m_Extents.z);
+			return m_Center.x - m_Extents.x <= bounds.m_Center.x + bounds.m_Extents.x &&
+			       m_Center.x + m_Extents.x >= bounds.m_Center.x - bounds.m_Extents.x &&
+			       m_Center.y - m_Extents.y <= bounds.m_Center.y + bounds.m_Extents.y &&
+			       m_Center.y + m_Extents.y >= bounds.m_Center.y - bounds.m_Extents.y &&
+			       m_Center.z - m_Extents.z <= bounds.m_Center.z + bounds.m_Extents.z &&
+			       m_Center.z + m_Extents.z >= bounds.m_Center.z - bounds.m_Extents.z;
 		}
 	}
 }

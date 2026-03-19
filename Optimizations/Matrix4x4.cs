@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace ToolBuddy.FrameRateBooster.Optimizations
 {
@@ -57,8 +56,9 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			res.z = m20 * vector.x + m21 * vector.y + m22 * vector.z;
 			return res;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Matrix4x4 operator*(Matrix4x4 lhs, Matrix4x4 rhs)
+		public static Matrix4x4 operator *(Matrix4x4 lhs, Matrix4x4 rhs)
 		{
 			Matrix4x4 res;
 			res.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20 + lhs.m03 * rhs.m30;
@@ -83,8 +83,9 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 
 			return res;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vector4 operator*(Matrix4x4 lhs, Vector4 vector)
+		public static Vector4 operator *(Matrix4x4 lhs, Vector4 vector)
 		{
 			Vector4 res;
 			res.x = lhs.m00 * vector.x + lhs.m01 * vector.y + lhs.m02 * vector.z + lhs.m03 * vector.w;
@@ -93,29 +94,53 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			res.w = lhs.m30 * vector.x + lhs.m31 * vector.y + lhs.m32 * vector.z + lhs.m33 * vector.w;
 			return res;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Matrix4x4 Scale(Vector3 vector)
 		{
 			Matrix4x4 m;
-			m.m00 = vector.x; m.m01 = 0F; m.m02       = 0F; m.m03       = 0F;
-			m.m10 = 0F; m.m11       = vector.y; m.m12 = 0F; m.m13       = 0F;
-			m.m20 = 0F; m.m21       = 0F; m.m22       = vector.z; m.m23 = 0F;
-			m.m30 = 0F; m.m31       = 0F; m.m32       = 0F; m.m33       = 1F;
+			m.m00 = vector.x;
+			m.m01 = 0F;
+			m.m02 = 0F;
+			m.m03 = 0F;
+			m.m10 = 0F;
+			m.m11 = vector.y;
+			m.m12 = 0F;
+			m.m13 = 0F;
+			m.m20 = 0F;
+			m.m21 = 0F;
+			m.m22 = vector.z;
+			m.m23 = 0F;
+			m.m30 = 0F;
+			m.m31 = 0F;
+			m.m32 = 0F;
+			m.m33 = 1F;
 			return m;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static  Matrix4x4 Translate(Vector3 vector)
+		public static Matrix4x4 Translate(Vector3 vector)
 		{
 			Matrix4x4 m;
-			m.m00 = 1F; m.m01 = 0F; m.m02 = 0F; m.m03 = vector.x;
-			m.m10 = 0F; m.m11 = 1F; m.m12 = 0F; m.m13 = vector.y;
-			m.m20 = 0F; m.m21 = 0F; m.m22 = 1F; m.m23 = vector.z;
-			m.m30 = 0F; m.m31 = 0F; m.m32 = 0F; m.m33 = 1F;
+			m.m00 = 1F;
+			m.m01 = 0F;
+			m.m02 = 0F;
+			m.m03 = vector.x;
+			m.m10 = 0F;
+			m.m11 = 1F;
+			m.m12 = 0F;
+			m.m13 = vector.y;
+			m.m20 = 0F;
+			m.m21 = 0F;
+			m.m22 = 1F;
+			m.m23 = vector.z;
+			m.m30 = 0F;
+			m.m31 = 0F;
+			m.m32 = 0F;
+			m.m33 = 1F;
 			return m;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Matrix4x4 Rotate(Quaternion q)
 		{
@@ -133,13 +158,25 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			var wz = q.w * z;
 
 			Matrix4x4 m;
-			m.m00 = 1.0f - (yy + zz); m.m10 = xy + wz; m.m20          = xz - wy; m.m30          = 0.0F;
-			m.m01 = xy - wz; m.m11          = 1.0f - (xx + zz); m.m21 = yz + wx; m.m31          = 0.0F;
-			m.m02 = xz + wy; m.m12          = yz - wx; m.m22          = 1.0f - (xx + yy); m.m32 = 0.0F;
-			m.m03 = 0.0F; m.m13             = 0.0F; m.m23             = 0.0F; m.m33             = 1.0F;
+			m.m00 = 1.0f - (yy + zz);
+			m.m10 = xy + wz;
+			m.m20 = xz - wy;
+			m.m30 = 0.0F;
+			m.m01 = xy - wz;
+			m.m11 = 1.0f - (xx + zz);
+			m.m21 = yz + wx;
+			m.m31 = 0.0F;
+			m.m02 = xz + wy;
+			m.m12 = yz - wx;
+			m.m22 = 1.0f - (xx + yy);
+			m.m32 = 0.0F;
+			m.m03 = 0.0F;
+			m.m13 = 0.0F;
+			m.m23 = 0.0F;
+			m.m33 = 1.0F;
 			return m;
 		}
-		
+
 		public float this[int index]
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -194,7 +231,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 				}
 			}
 		}
-		
+
 		public float this[int row, int column]
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -203,7 +240,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set => this[row + column * 4] = value;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public UnityEngine.Vector4 GetColumn(int index)
 		{
@@ -229,7 +266,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 				       _ => throw new IndexOutOfRangeException("Invalid row index!")
 			       };
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetColumn(int index, Vector4 column)
 		{
@@ -238,7 +275,7 @@ namespace ToolBuddy.FrameRateBooster.Optimizations
 			this[2, index] = column.z;
 			this[3, index] = column.w;
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SetRow(int index, Vector4 row)
 		{
