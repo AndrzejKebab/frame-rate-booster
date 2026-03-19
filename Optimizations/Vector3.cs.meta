@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 452e44ecd6bba5e4bb6c114c19df8baf
+guid: ca27cb6975353a744b20f7f77419f0fa
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 120660
   packageName: Frame Rate Booster
   packageVersion: 1.3.0
-  assetPath: Assets/Plugins/ToolBuddy/Assets/FrameRateBooster/Optimizations/Vector2.cs
+  assetPath: Assets/Plugins/ToolBuddy/Assets/FrameRateBooster/Optimizations/Vector3.cs
   uploadId: 505309

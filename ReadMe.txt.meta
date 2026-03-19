@@ -1,11 +1,7 @@
 fileFormatVersion: 2
-guid: da997bfd43f328241953fec369fb56ae
-MonoImporter:
+guid: 9cb0a70ecd8bd624ea8ba37cc7067612
+TextScriptImporter:
   externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon: {instanceID: 0}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -14,5 +10,5 @@ AssetOrigin:
   productId: 120660
   packageName: Frame Rate Booster
   packageVersion: 1.3.0
-  assetPath: Assets/Plugins/ToolBuddy/Assets/FrameRateBooster/Optimizations/Vector3.cs
+  assetPath: Assets/Plugins/ToolBuddy/Assets/FrameRateBooster/ReadMe.txt
   uploadId: 505309
